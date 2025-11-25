@@ -25,15 +25,28 @@ class URL:
             family=socket.AF_INET,   
             type=socket.SOCK_STREAM,
             proto=socket.IPPROTO_TCP,
-        )        
+        )   
 
         s.connect((self.host, self.port))
+
         if self.scheme == "https":
             ctx = ssl.create_default_context()
             s = ctx.wrap_socket(s, server_hostname=self.host)
-        request = "GET {} HTTP/1.0\r\n".format(self.path)
-        request += "Host: {}\r\n".format(self.host)
+
+        request = "GET {} HTTP/1.1\r\n".format(self.path) # Build the request line
+
+        #headers
+        headers = {
+            "Host": self.host,
+            "Connection": "close",
+            "User-Agent": "ml-browser/0.1",
+        }
+
+        for name, value in headers.items():
+            request += f"{name}: {value}\r\n"
+
         request +="\r\n"
+
         s.send(request.encode("utf8"))
 
         response = s.makefile("r", encoding="utf8", newline="\r\n")
