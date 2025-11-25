@@ -10,10 +10,11 @@ class URL:
         elif self.scheme == "https":
             self.port = 443
 
-        if "/" not in url:
-            self.url = url + "/"
-        self.host, url  = url.split("/", 1)
-        self.path = url + "/"
+        if "/" in url:
+            self.host, url  = url.split("/", 1)
+            self.path = "/" + url
+        else:
+            self.path = url + "/"
 
         if ":" in self.host:
             self.host, port = self.host.split(":", 1)
