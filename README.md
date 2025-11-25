@@ -12,7 +12,6 @@ Note: make sure you're using python3 for this to work.
 
 Just clone, and run the file python3 browser,py <url>
 
-Note: At the moment we're supporting http/1.0 and when we're hitting a http/1.1 we're getting 400 bad requests
 ## Resources
 
 - https://realpython.com/python-sockets/
