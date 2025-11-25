@@ -4,7 +4,7 @@ import ssl
 class URL:
     def __init__(self, url):
         self.scheme, url = url.split("://", 1)
-        assert self.scheme in ["http", "https"]
+        assert self.scheme in ["http", "https", "file"]
         if self.scheme == "http":
             self.port = 80
         elif self.scheme == "https":
@@ -20,7 +20,16 @@ class URL:
             self.host, port = self.host.split(":", 1)
             self.port = int(port)
 
+        if self.scheme == "file":
+            self.path = "/" + url.lstrip("/")
+            self.host = None
+            return
+
     def request(self):
+        if self.scheme == "file":
+            with open(self.path, "r", encoding="utf8") as f:
+                return f.read()
+
         s = socket.socket(
             family=socket.AF_INET,   
             type=socket.SOCK_STREAM,
@@ -83,5 +92,9 @@ def load(url):
 
 if __name__ == "__main__":
     import sys
-    load(URL(sys.argv[1]))
+    if len(sys.argv) == 1:
+        default = "file:///home/lochipi/Desktop/learn/browser-test-file.txt"
+        load(URL(default))
+    else:
+        load(URL(sys.argv[1]))
 
